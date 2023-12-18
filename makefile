@@ -1,4 +1,4 @@
-.PHONY: clean all
+.PHONY: all clean
 MKDIR = mkdir
 ++ = g++
 
@@ -14,13 +14,13 @@ endif
 
 DIR_OBJ = obj
 DIR = $(DIR_OBJ)
-SRCS = $(wildcard *.cpp) $(wildcard */*.cpp)
+SRCS = $(wildcard */*.cpp)
 OBJS = $(SRCS:.cpp=.o)
 OBJS := $(notdir $(OBJS))
 OBJS := $(addprefix $(DIR_OBJ)/,$(OBJS))
 EXES = $(wildcard *.exe)
 
-all:$(DIR) Main debug clean
+all:$(DIR) Sign Veri debug clean
 
 debug:
 	@echo $(SRCS)
@@ -28,10 +28,13 @@ debug:
 $(DIR):
 	$(MKDIR) $@
 Main:$(OBJS)
-	$(++) $^ $(FLAGS) -o $@
+	$(++) $^ $@.cpp $(FLAGS) -o $@
 	@echo making $@
-$(DIR_OBJ)/%.o: %.cpp
-	$(++) -c $^ $(FLAGS) -o $@
+Sign:$(OBJS)
+	$(++) $^ $@.cpp $(FLAGS) -o $@
+	@echo making $@
+Veri:$(OBJS)
+	$(++) $^ $@.cpp $(FLAGS) -o $@
 	@echo making $@
 $(DIR_OBJ)/%.o: */%.cpp
 	$(++) -c $^ $(FLAGS) -o $@
