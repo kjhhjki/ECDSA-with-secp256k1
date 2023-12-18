@@ -186,7 +186,7 @@ namespace Ecc
     string compress_key(const Point &public_key)
     {
         string res;
-        if(public_key.y.a[0] & 1) res += "03";
+        if(public_key.y % 2) res += "03";
         else res += "02";
         res += to_string(public_key.x, 16);
         return res;
@@ -209,8 +209,8 @@ namespace Ecc
         _int256::__int256 x = _int256::__int256(public_key.substr(2, public_key.size()-2), 16),
                           a = (x * x % P * x % P + _int256::__int256(7)) % P,
                           y = qpow(a, (P + 1) / 4);
-        if(y%2 && public_key[1] == '3') y = P - y;
-        if((!y%2) && public_key[1] == '2') y = P - y;
+        if(y%2 && public_key[1] == '2') y = P - y;
+        if((!(y%2)) && public_key[1] == '3') y = P - y;
         return Point(x, y);
     }
 }
